@@ -73,7 +73,7 @@ class RpcServer : public UListener {
 
      public:
 
-        UStatus onReceive(UMessage &message) const override {
+        UStatus onReceive(UMessage &message) override {
 
             UStatus status;
 
@@ -106,7 +106,7 @@ class ResponseListener : public UListener {
 
      public:
 
-        UStatus onReceive(UMessage &message) const override {
+        UStatus onReceive(UMessage &message) override {
 
             (void) message;
 

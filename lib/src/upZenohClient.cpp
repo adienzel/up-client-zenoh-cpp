@@ -40,8 +40,9 @@ std::shared_ptr<UpZenohClient> UpZenohClient::instance(void) noexcept {
         if (handle = w_handle.lock()) {
             return handle;
         }
-
-        handle = std::make_shared<UpZenohClient>(ConstructToken());
+        ZenohSessionManagerConfig config{};
+        
+        handle = std::make_shared<UpZenohClient>(ConstructToken(), config);
         if (handle->rpcSuccess_.code() == UCode::OK && handle->uSuccess_.code() == UCode::OK) {
             w_handle = handle;
             return handle;

@@ -23,7 +23,6 @@
  */
 
 #include <up-client-zenoh-cpp/transport/zenohUTransport.h>
-#include <up-client-zenoh-cpp/session/zenohSessionManager.h>
 #include <up-cpp/uuid/serializer/UuidSerializer.h>
 #include <up-client-zenoh-cpp/uri/zenohUri.h>
 #include <up-cpp/uri/builder/BuildUResource.h>
@@ -39,10 +38,7 @@ using namespace uprotocol::uuid;
 using namespace uprotocol::v1;
 using namespace uprotocol::utransport;
 
-ZenohUTransport::ZenohUTransport() noexcept {
-    /* by default initialized to empty strings */
-    ZenohSessionManagerConfig sessionConfig;
-
+ZenohUTransport::ZenohUTransport(ZenohSessionManagerConfig &sessionConfig) noexcept {
     if (UCode::OK != ZenohSessionManager::instance().init(sessionConfig)) {
         spdlog::error("zenohSessionManager::instance().init() failed");
         uSuccess_.set_code(UCode::INTERNAL);
@@ -56,6 +52,15 @@ ZenohUTransport::ZenohUTransport() noexcept {
     
     uSuccess_.set_code(UCode::OK);
 }
+
+
+//ZenohUTransport::ZenohUTransport() noexcept {
+//    /* by default initialized to empty strings */
+//    ZenohSessionManagerConfig sessionConfig {};
+//
+//    new ZenohUTransport(sessionConfig);
+//}
+
 
 ZenohUTransport::~ZenohUTransport() noexcept {
     for (auto pub : pubHandleMap_) {
@@ -132,7 +137,6 @@ UCode ZenohUTransport::sendPublish(const UMessage &message) noexcept {
             if (handleInfo != pubHandleMap_.end()) {
                 pub = handleInfo->second;
             } else {
-
                 pub = z_declare_publisher(z_loan(session_), z_keyexpr(key.c_str()), nullptr);
                 if (false == z_check(pub)) {
                     spdlog::error("Unable to declare Publisher for key expression!");
@@ -233,7 +237,7 @@ UCode ZenohUTransport::sendQueryable(const UMessage &message) noexcept {
 }
 
 UStatus ZenohUTransport::registerListener(const UUri &uri,
-                                          const UListener &listener) noexcept {
+                                          UListener &listener) noexcept {
    
     UStatus status;
 
@@ -259,7 +263,7 @@ UStatus ZenohUTransport::registerListener(const UUri &uri,
 
             listenerContainer = listenerMap_[key];
 
-            for (const UListener *existingListenerPtr : listenerContainer->listenerVector_) {
+            for (UListener *existingListenerPtr : listenerContainer->listenerVector_) {
                 if (existingListenerPtr == &listener) {
                     spdlog::error("listener already set for URI");
                     status.set_code(UCode::INVALID_ARGUMENT);
@@ -342,7 +346,7 @@ UStatus ZenohUTransport::registerListener(const UUri &uri,
 }
 
 UStatus ZenohUTransport::unregisterListener(const UUri &uri, 
-                                            const UListener &listener) noexcept {
+                                            UListener &listener) noexcept {
 
     UStatus status;
 
@@ -360,7 +364,7 @@ UStatus ZenohUTransport::unregisterListener(const UUri &uri,
     int32_t index = 0;
 
     /* need to check with who the listener is associated */
-    for (const UListener *existingListenerPtr : listenerContainer->listenerVector_) {
+    for (UListener *existingListenerPtr : listenerContainer->listenerVector_) {
 
         if (&listener == existingListenerPtr) {
 

@@ -53,7 +53,7 @@ class TestLatencyPing : public ::testing::Test, UListener {
 
     public:
 
-        UStatus onReceive(UMessage &message) const override {
+        UStatus onReceive(UMessage &message) override {
             
             UStatus status;
 

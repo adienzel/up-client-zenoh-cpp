@@ -100,7 +100,7 @@ std::future<RpcResponse> ZenohRpcClient::invokeMethod(const UUri &topic,
 UStatus ZenohRpcClient::invokeMethod(const UUri &topic,
                                      const UPayload &payload,
                                      const CallOptions &options,
-                                     const UListener &listener) noexcept {
+                                     UListener &listener) noexcept {
     UStatus status;
 
     status.set_code(UCode::INTERNAL);
@@ -129,7 +129,7 @@ UStatus ZenohRpcClient::invokeMethod(const UUri &topic,
 std::future<RpcResponse> ZenohRpcClient::invokeMethodInternal(const UUri &topic,
                                                               const UPayload &payload,
                                                               const CallOptions &options,
-                                                              const UListener *listener) noexcept {
+                                                              UListener *listener) noexcept {
     std::future<RpcResponse> future;
     z_owned_bytes_map_t map = z_bytes_map_new();
     z_get_options_t opts = z_get_options_default();
@@ -204,7 +204,7 @@ std::future<RpcResponse> ZenohRpcClient::invokeMethodInternal(const UUri &topic,
 }
 
 RpcResponse ZenohRpcClient::handleReply(const std::shared_ptr<z_owned_reply_channel_t> &channel,
-                                        const UListener *listener) noexcept {
+                                        UListener *listener) noexcept {
 
     z_owned_reply_t reply = z_reply_null();
     RpcResponse rpcResponse;

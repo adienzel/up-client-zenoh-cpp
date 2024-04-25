@@ -36,7 +36,7 @@ namespace uprotocol::client {
             struct ConstructToken {};
 
         public:
-            UpZenohClient(const struct ConstructToken &) {}
+            UpZenohClient(const struct ConstructToken &, ZenohSessionManagerConfig& config) : ZenohUTransport(config) {}
             UpZenohClient(const UpZenohClient&) = delete;
             UpZenohClient& operator=(const UpZenohClient&) = delete;
 

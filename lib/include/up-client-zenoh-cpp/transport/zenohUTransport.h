@@ -31,6 +31,8 @@
 #include <zenoh.h>
 #include <up-cpp/transport/datamodel/UPayload.h>
 #include <up-cpp/transport/datamodel/UMessage.h>
+#include <up-client-zenoh-cpp/session/zenohSessionManager.h>
+
 #include <up-cpp/transport/UTransport.h>
 
 namespace uprotocol::utransport {
@@ -39,7 +41,7 @@ namespace uprotocol::utransport {
         public:
             std::vector<z_owned_subscriber_t> subVector_;
             std::vector<z_owned_queryable_t> queryVector_;
-            std::vector<const uprotocol::utransport::UListener*> listenerVector_;
+            std::vector<uprotocol::utransport::UListener*> listenerVector_;
     };
 
     class ZenohUTransport : public uprotocol::utransport::UTransport {
@@ -65,7 +67,7 @@ namespace uprotocol::utransport {
             * with the appropriate failure.
             */ 
             uprotocol::v1::UStatus registerListener(const uprotocol::v1::UUri &uri,
-                                                    const uprotocol::utransport::UListener &listener) noexcept;
+                                                    uprotocol::utransport::UListener &listener) noexcept;
 
             /**
             * Unregister a listener for a given topic. Messages arriving on this topic will no longer be processed
@@ -76,13 +78,15 @@ namespace uprotocol::utransport {
             * with the appropriate failure.
             */
             uprotocol::v1::UStatus unregisterListener(const uprotocol::v1::UUri &uri, 
-                                                      const uprotocol::utransport::UListener &listener) noexcept;
+                                                      uprotocol::utransport::UListener &listener) noexcept;
 
         protected:
             /* Initialization success/failure */
             uprotocol::v1::UStatus uSuccess_;
-
-            ZenohUTransport() noexcept;
+            
+           // ZenohUTransport() noexcept;
+            ZenohUTransport(ZenohSessionManagerConfig &config) noexcept;
+            //ZenohUTransport(ZenohSessionManagerConfig config) noexcept;
             ~ZenohUTransport() noexcept;
 
         private:
@@ -129,7 +133,7 @@ namespace uprotocol::utransport {
             static constexpr auto termMaxRetries_ = size_t(10);
             static constexpr auto termRetryTimeout_ = std::chrono::milliseconds(100);
 
-            using cbArgumentType = std::tuple<std::shared_ptr<uprotocol::v1::UUri>, ZenohUTransport*, const uprotocol::utransport::UListener&>;
+            using cbArgumentType = std::tuple<std::shared_ptr<uprotocol::v1::UUri>, ZenohUTransport*, uprotocol::utransport::UListener&>;
     };
 }
 #endif /*_ZENOH_UTRANSPORT_*/

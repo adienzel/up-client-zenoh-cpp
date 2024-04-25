@@ -73,7 +73,7 @@ namespace uprotocol::rpc {
             uprotocol::v1::UStatus invokeMethod(const uprotocol::v1::UUri &topic,
                                                 const uprotocol::utransport::UPayload &payload,
                                                 const uprotocol::v1::CallOptions &options,
-                                                const uprotocol::utransport::UListener &callback) noexcept;
+                                                uprotocol::utransport::UListener &callback) noexcept;
 
             /**
              * get the number of max concurrent request 
@@ -105,10 +105,10 @@ namespace uprotocol::rpc {
             std::future<uprotocol::rpc::RpcResponse> invokeMethodInternal(const uprotocol::v1::UUri &topic,
                                                                           const uprotocol::utransport::UPayload &payload,
                                                                           const uprotocol::v1::CallOptions &options,
-                                                                          const uprotocol::utransport::UListener *callback = nullptr) noexcept;
+                                                                          uprotocol::utransport::UListener *callback = nullptr) noexcept;
 
             static uprotocol::rpc::RpcResponse handleReply(const std::shared_ptr<z_owned_reply_channel_t> &channel, 
-                                                           const uprotocol::utransport::UListener *callback = nullptr) noexcept;
+                                                           uprotocol::utransport::UListener *callback = nullptr) noexcept;
             
             static constexpr auto requestTimeoutMs_ = 5000;
             static constexpr auto queueSizeDefault_ = size_t(20);

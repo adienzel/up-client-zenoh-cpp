@@ -35,7 +35,11 @@ struct ZenohSessionManagerConfig
     /* used for static connection between zenoh peers */
     std::string connectKey;
     std::string listenKey;
-
+    std::string qosEnabled;
+    std::string lowLatency;
+////    zc_config_insert_json(z_loan(config), "transport/unicast/qos/enabled", "false");
+////    zc_config_insert_json(z_loan(config), "transport/unicast/lowlatency", "true");
+    
     ZenohSessionManagerConfig() : connectKey(), listenKey() {}
 };
 

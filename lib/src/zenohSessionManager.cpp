@@ -44,7 +44,7 @@ UCode ZenohSessionManager::init(ZenohSessionManagerConfig &sessionConfig) noexce
 
             z_owned_config_t config = z_config_default();
         
-            if (0 < sessionConfig.connectKey.length()) {
+            if (!sessionConfig.connectKey.empty()) {
 
                 if (0 > zc_config_insert_json(z_loan(config), Z_CONFIG_CONNECT_KEY, sessionConfig.connectKey.c_str())) {
                     spdlog::error("zc_config_insert_json (Z_CONFIG_CONNECT_KEY) failed");
@@ -52,18 +52,36 @@ UCode ZenohSessionManager::init(ZenohSessionManagerConfig &sessionConfig) noexce
                 }
             }
 
-            if (0 < sessionConfig.listenKey.length()) {
+            if (!sessionConfig.listenKey.empty()) {
 
                 if (0 > zc_config_insert_json(z_loan(config), Z_CONFIG_LISTEN_KEY, sessionConfig.listenKey.c_str())) {
                     spdlog::error("zc_config_insert_json (Z_CONFIG_LISTEN_KEY) failed");
                     return UCode::INTERNAL;
                 }
             }
+            if (!sessionConfig.qosEnabled.empty() && (sessionConfig.qosEnabled == "false" || sessionConfig.qosEnabled =="true")) {
+                if (0 > zc_config_insert_json(z_loan(config), "transport/unicast/qos/enabled", "false")) {
+                    spdlog::error("zc_config_insert_json (transport/unicast/qos/enabled) failed");
+                    return UCode::INTERNAL;
+                }
+            }
+
+            if (!sessionConfig.lowLatency.empty() && (sessionConfig.lowLatency == "false" || sessionConfig.lowLatency =="true")) {
+                if (0 > zc_config_insert_json(z_loan(config), "transport/unicast/lowlatency", "true")) {
+                    spdlog::error("zc_config_insert_json (transport/unicast/lowlatency) failed");
+                    return UCode::INTERNAL;
+                }
+            }
+            
+            if (0 > zc_config_insert_json(z_loan(config), Z_CONFIG_MULTICAST_SCOUTING_KEY, "false")) {
+                spdlog::error("zc_config_insert_json (transport/unicast/lowlatency) failed");
+                return UCode::INTERNAL;
+            }
+
+
 
             session_ = z_open(z_move(config));
-
             if (false == z_check(session_)) {
-
                 spdlog::error("z_open failed");
                 return UCode::INTERNAL;
             }

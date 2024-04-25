@@ -61,7 +61,7 @@ class CustomListener : public UListener {
             transport_ = transport;
         }
 
-        UStatus onReceive(UMessage &message) const override {
+        UStatus onReceive(UMessage &message) override {
 
             (void)message;
 
