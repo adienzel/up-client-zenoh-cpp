@@ -73,12 +73,19 @@ UCode ZenohSessionManager::init(ZenohSessionManagerConfig &sessionConfig) noexce
                 }
             }
             
-            if (0 > zc_config_insert_json(z_loan(config), Z_CONFIG_MULTICAST_SCOUTING_KEY, "false")) {
-                spdlog::error("zc_config_insert_json (transport/unicast/lowlatency) failed");
-                return UCode::INTERNAL;
+            if (sessionConfig.scouting_delay == 0) {
+                if (0 > zc_config_insert_json(z_loan(config), "scouting/delay", "0")) {
+                    spdlog::error("zc_config_insert_json (scouting/delay) failed");
+                    return UCode::INTERNAL;
+                }
+                
             }
+//            if (0 > zc_config_insert_json(z_loan(config), Z_CONFIG_MULTICAST_SCOUTING_KEY, "false")) {
+//                spdlog::error("zc_config_insert_json (transport/unicast/lowlatency) failed");
+//                return UCode::INTERNAL;
+//            }
 
-
+           
 
             session_ = z_open(z_move(config));
             if (false == z_check(session_)) {

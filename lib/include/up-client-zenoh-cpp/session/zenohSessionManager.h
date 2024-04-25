@@ -37,6 +37,7 @@ struct ZenohSessionManagerConfig
     std::string listenKey;
     std::string qosEnabled;
     std::string lowLatency;
+    uint32_t scouting_delay;
 ////    zc_config_insert_json(z_loan(config), "transport/unicast/qos/enabled", "false");
 ////    zc_config_insert_json(z_loan(config), "transport/unicast/lowlatency", "true");
     
