@@ -144,8 +144,9 @@ class TestLatencyPing : public ::testing::Test, UListener {
                 LatencyPerPID entry = LatencyPerPID{};;
                 processTable_[childProc.id()] = entry;
             }
-          
-            auto instance = UpZenohClient::instance();
+    
+            ZenohSessionManagerConfig config{};
+            auto instance = UpZenohClient::instance(config);
             spdlog::info("sleeping for 5 seconds to allow session creation");
             sleep(5);
             spdlog::info("Starting test");

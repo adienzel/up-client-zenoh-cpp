@@ -33,18 +33,20 @@ namespace uprotocol::client {
     class UpZenohClient : public uprotocol::utransport::ZenohUTransport, public uprotocol::rpc::ZenohRpcClient {
 
         private:
-            struct ConstructToken {};
+        struct ConstructToken {};
 
         public:
-            UpZenohClient(const struct ConstructToken &, ZenohSessionManagerConfig& config) : ZenohUTransport(config) {}
-            UpZenohClient(const UpZenohClient&) = delete;
-            UpZenohClient& operator=(const UpZenohClient&) = delete;
-
-            /**
+        UpZenohClient(ZenohSessionManagerConfig& config) : UpZenohClient(ConstructToken(), config) {}
+        UpZenohClient(const struct ConstructToken &, ZenohSessionManagerConfig& config) : ZenohUTransport(config) {}
+        UpZenohClient(const UpZenohClient&) = delete;
+        UpZenohClient& operator=(const UpZenohClient&) = delete;
+    
+     
+        /**
             * The API provides an instance of the zenoh session
             * @return instance of UpZenohClient
             */
-            static std::shared_ptr<UpZenohClient> instance(void) noexcept;
+            static std::shared_ptr<UpZenohClient> instance(ZenohSessionManagerConfig& config) noexcept;
     };
     
 }

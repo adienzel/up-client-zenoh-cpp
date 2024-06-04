@@ -36,9 +36,11 @@ using namespace uprotocol::rpc;
 using namespace uprotocol::client;
 
 namespace {
-
-UUri const& rpcUri() { 
-    static auto uri = BuildUUri()
+    
+    ZenohSessionManagerConfig config{};
+    
+    UUri const& rpcUri() { 
+        static auto uri = BuildUUri()
                       .setAutority(BuildUAuthority().build())
                       .setEntity(BuildUEntity()
                               .setName("test_rpc.app")
@@ -49,8 +51,8 @@ UUri const& rpcUri() {
                               .setRpcRequest("handler", 1)
                               .build())
                       .build();
-    return uri;
-}
+        return uri;
+    }
 
 UUri const& rpcNoServerUri() {
     static auto uri = BuildUUri()
@@ -86,16 +88,17 @@ class RpcServer : public UListener {
             UPayload outPayload = message.payload();
 
             UMessage respMessage(outPayload, responseAttributes);
-
+    
+    
             if (nullptr != message.payload().data()) {
 
                 std::string cmd(message.payload().data(), message.payload().data() + message.payload().size());
 
                 if ("No Response" != cmd) {
-                    return UpZenohClient::instance()->send(respMessage);
+                     return UpZenohClient::instance(config)->send(respMessage);
                 }
             } else {
-                return UpZenohClient::instance()->send(respMessage);
+                return UpZenohClient::instance(config)->send(respMessage);
             }
                    
             return status;
@@ -141,7 +144,7 @@ ResponseListener TestRPcClient::responseListener;
 
 TEST_F(TestRPcClient, InvokeMethodWithoutServer) {
     
-    auto instance = UpZenohClient::instance();
+    auto instance = UpZenohClient::instance(config);
     
     EXPECT_NE(instance, nullptr);
 
@@ -162,7 +165,7 @@ TEST_F(TestRPcClient, InvokeMethodWithoutServer) {
 
 TEST_F(TestRPcClient, InvokeMethodWithLowPriority) {
     
-    auto instance = UpZenohClient::instance();
+    auto instance = UpZenohClient::instance(config);
 
     EXPECT_NE(instance, nullptr);
 
@@ -179,7 +182,7 @@ TEST_F(TestRPcClient, InvokeMethodWithLowPriority) {
 
 TEST_F(TestRPcClient, invokeMethodNoResponse) {
     
-    auto instance = UpZenohClient::instance();
+    auto instance = UpZenohClient::instance(config);
 
     EXPECT_NE(instance, nullptr);
 
@@ -204,7 +207,7 @@ TEST_F(TestRPcClient, invokeMethodNoResponse) {
 
 TEST_F(TestRPcClient, maxSimultaneousRequests) {
     
-    auto instance = UpZenohClient::instance();
+    auto instance = UpZenohClient::instance(config);
 
     EXPECT_NE(instance, nullptr);
 
@@ -248,7 +251,7 @@ TEST_F(TestRPcClient, maxSimultaneousRequests) {
 
 TEST_F(TestRPcClient, invokeMethodWithNullResponse) {
     
-    auto instance = UpZenohClient::instance();
+    auto instance = UpZenohClient::instance(config);
 
     EXPECT_NE(instance, nullptr);
 
@@ -283,7 +286,7 @@ TEST_F(TestRPcClient, invokeMethodWithResponse) {
     std::string message = "Response";
     std::vector<uint8_t> data(message.begin(), message.end());
 
-    auto instance = UpZenohClient::instance();
+    auto instance = UpZenohClient::instance(config);
 
     EXPECT_NE(instance, nullptr);
 
@@ -316,7 +319,7 @@ TEST_F(TestRPcClient, invokeMethodWithResponse) {
 
 TEST_F(TestRPcClient, invokeMethodWithCbResponse) {
     
-    auto instance = UpZenohClient::instance();
+    auto instance = UpZenohClient::instance(config);
     
     EXPECT_NE(instance, nullptr);
 
@@ -337,7 +340,7 @@ TEST_F(TestRPcClient, invokeMethodWithCbResponse) {
 
 TEST_F(TestRPcClient, invokeMethodWithCbResponseFailure) {
     
-    auto instance = UpZenohClient::instance();
+    auto instance = UpZenohClient::instance(config);
   
     EXPECT_NE(instance, nullptr);
 

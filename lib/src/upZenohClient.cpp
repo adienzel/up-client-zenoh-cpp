@@ -28,7 +28,7 @@
 using namespace uprotocol::v1;
 using namespace uprotocol::client;
 
-std::shared_ptr<UpZenohClient> UpZenohClient::instance(void) noexcept {
+std::shared_ptr<UpZenohClient> UpZenohClient::instance(ZenohSessionManagerConfig& config) noexcept {
     static std::weak_ptr<UpZenohClient> w_handle;
 
     if (auto handle = w_handle.lock()) {
@@ -40,8 +40,8 @@ std::shared_ptr<UpZenohClient> UpZenohClient::instance(void) noexcept {
         if (handle = w_handle.lock()) {
             return handle;
         }
-        ZenohSessionManagerConfig config{};
-        
+//        ZenohSessionManagerConfig config{};
+std::cout << __FILE__ << ":" <<  __LINE__ << " in instance "  << std::endl;       
         handle = std::make_shared<UpZenohClient>(ConstructToken(), config);
         if (handle->rpcSuccess_.code() == UCode::OK && handle->uSuccess_.code() == UCode::OK) {
             w_handle = handle;

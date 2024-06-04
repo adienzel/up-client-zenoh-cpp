@@ -46,9 +46,9 @@ class UpClientZenoh(ConanFile):
         if self.options.build_unbundled: #each componenet is built independently 
             self.requires("up-cpp/0.1.1-dev")
             if self.options.zenoh_package:
-                self.requires("zenohc/cci.20240213")
+                self.requires("zenohc/cci.20240430")
         if self.options.build_cross_compiling :
-            self.requires("zenohc/cci.20240213")
+            self.requires("zenohc/cci.20240430")
 
     def generate(self):
         tc = CMakeToolchain(self)

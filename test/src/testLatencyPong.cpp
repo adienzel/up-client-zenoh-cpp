@@ -99,8 +99,8 @@ int main(int argc,
     signal(SIGINT, signalHandler);
 
     UStatus status;
-
-    std::shared_ptr<UpZenohClient> transport = UpZenohClient::instance();
+    ZenohSessionManagerConfig config{};
+    std::shared_ptr<UpZenohClient> transport = UpZenohClient::instance(config);
     /* Initialize zenoh utransport */
     if (nullptr == transport) {
         spdlog::error("UpZenohClientinit failed");

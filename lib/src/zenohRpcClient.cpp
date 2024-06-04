@@ -46,11 +46,11 @@ ZenohRpcClient::ZenohRpcClient() noexcept {
     /* by default initialized to empty strings */
     ZenohSessionManagerConfig config;
 
-    if (UCode::OK != ZenohSessionManager::instance().init(config)) {
-       spdlog::error("zenohSessionManager::instance().init() failed");
-       rpcSuccess_.set_code(UCode::UNAVAILABLE);
-       return;
-    }
+//    if (UCode::OK != ZenohSessionManager::instance().init(config)) {
+//       spdlog::error("zenohSessionManager::instance().init() failed");
+//       rpcSuccess_.set_code(UCode::UNAVAILABLE);
+//       return;
+//    }
 
     if (ZenohSessionManager::instance().getSession().has_value()) {
         session_ = ZenohSessionManager::instance().getSession().value();

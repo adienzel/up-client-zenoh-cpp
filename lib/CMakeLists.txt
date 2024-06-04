@@ -23,7 +23,7 @@ find_package(Protobuf REQUIRED)
 find_package(spdlog REQUIRED)
 
 if(BUILD_UNBUNDLED)
-    find_package(up-cpp REQUIRED)
+#    find_package(up-cpp REQUIRED)
     find_package(zenohc REQUIRED)
 else()
     if(CROSS_COMPILE)
@@ -31,7 +31,7 @@ else()
     else()
         find_library(ZENOH_LIB zenohc)
     endif()
-    find_package(up-cpp QUIET)
+#    find_package(up-cpp QUIET)
 endif()
 
 # Support pulling headers outside of /usr/local
